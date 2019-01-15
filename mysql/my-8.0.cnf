@@ -1,0 +1,201 @@
+# mysql 8.0.x
+# 32 cpu core
+# 128g memory
+# ssd storage with 20000 iops in 8k page size
+
+[client]
+port = 3306
+socket = /opt/mysql/run/mysql.sock
+default_character_set = utf8mb4
+
+[mysql]
+prompt="[\u@\h \R:\m \d]> "
+no-auto-rehash
+
+[mysqld_safe]
+malloc-lib = tcmalloc
+
+[mysqld]
+############
+### misc ###
+############
+user = mysql
+port = 3306
+basedir = /usr/local/mysql
+datadir = /opt/mysql/data
+pid_file = /opt/mysql/run/mysql.pid
+socket = /opt/mysql/run/mysql.sock
+tmpdir = /opt/mysql/tmp
+server_id = 1553306
+character_set_server = utf8mb4
+collation_server = utf8mb4_unicode_ci
+transaction_isolation = READ-COMMITTED
+lower_case_table_names = 1
+explicit_defaults_for_timestamp = on        # This system variable determines whether the server enables certain nonstandard behaviors for default values and NULL-value handling in TIMESTAMP columns.
+mysqlx = off
+sql_require_primary_key = on
+auto_generate_certs = off
+caching_sha2_password_auto_generate_rsa_keys = off
+sha256_password_auto_generate_rsa_keys = off
+
+#################
+### error log ###
+#################
+log_timestamps = system
+log_error = /opt/mysql/logs/error/error.log
+log_error_verbosity = 2
+
+##################
+### binary log ###
+##################
+log_bin = /opt/mysql/logs/binary/bin
+max_binlog_size = 512m
+binlog_format = row
+sync_binlog = 1
+binlog_rows_query_log_events = on
+binlog_expire_logs_seconds = 604800
+log_bin_trust_function_creators = on
+
+################
+### slow log ###
+################
+slow_query_log = on
+slow_query_log_file = /opt/mysql/logs/slow/slow.log
+long_query_time = 1
+# log_queries_not_using_indexes = on
+# log_throttle_queries_not_using_indexes = 10
+# log_slow_slave_statements = on        # When the slow query log is enabled, this variable enables logging for queries that have taken more than long_query_time seconds to execute on the slave.
+# min_examined_row_limit = 100          # Queries that examine fewer than this number of rows are not logged to the slow query log.
+
+###################
+### general log ###
+###################
+# general_log = on
+# general_log_file = /data/mysql/logs/general/general.log
+
+##################
+### connection ###
+##################
+max_allowed_packet = 64m
+wait_timeout = 600                  # The number of seconds the server waits for activity on a noninteractive connection before closing it.
+interactive_timeout = 600           # The number of seconds the server waits for activity on an interactive connection before closing it.
+lock_wait_timeout = 300             # This variable specifies the timeout in seconds for attempts to acquire metadata locks.This timeout applies to all statements that use metadata locks. These include DML and DDL operations on tables, views, stored procedures, and stored functions, as well as LOCK TABLES, FLUSH TABLES WITH READ LOCK, and HANDLER statements.
+skip_name_resolve = on
+open_files_limit = 65535            # 1) 10 + max_connections + (table_open_cache * 2),  2) max_connections * 5,  3) operating system limit if positive,  4) if operating system limit is Infinity: open_files_limit value specified at startup, 5000 if none.
+max_connections = 512
+max_user_connections = 128          # The maximum number of simultaneous connections permitted to any given MySQL user account.
+max_connect_errors = 1000000        # If more than this many successive connection requests from a host are interrupted without a successful connection, the server blocks that host from further connections. 
+# back_log                          # The number of outstanding connection requests MySQL can have.You need to increase this only if you expect a large number of connections in a short period of time. The default value is based on the following formula: 50 + ( max_connections / 5 )
+
+######################
+### session memory ###
+######################
+bulk_insert_buffer_size = 0         # for myisam table
+read_buffer_size = 16m              # This option is also used in the following context for all storage engines: for caching the indexes in a temporary file (not a temporary table), when sorting rows for ORDER BY; for bulk insert into partitions; for caching results of nested queries.
+read_rnd_buffer_size = 32m          # This variable is used for reads from MyISAM tables, and, for any storage engine, for Multi-Range Read optimization.
+sort_buffer_size = 16m
+join_buffer_size = 16m
+binlog_cache_size = 4m              # A binary log cache is allocated for each client if the server supports any transactional storage engines and if the server has the binary log enabled.
+max_binlog_cache_size = 4g          # The maximum recommended value is 4GB; this is due to the fact that MySQL currently cannot work with binary log positions greater than 4GB.
+thread_stack = 256k                 # The stack size for each thread. The default of 192KB (256KB for 64-bit systems) is large enough for normal operation.
+# thread_cache_size                 # How many threads the server should cache for reuse. By examining the difference between the Connections and Threads_created status variables, you can see how efficient the thread cache is. The default value is based on the following formula: 8 + ( max_connections / 100 )
+
+#####################
+### global memory ###
+#####################
+key_buffer_size = 8                 # for myisam table
+tmp_table_size = 64m                # This variable does not apply to user-created MEMORY tables. The actual limit is determined from whichever of the values of tmp_table_size and max_heap_table_size is smaller. Increase the value of tmp_table_size (and max_heap_table_size if necessary) if you do many advanced GROUP BY queries and you have lots of memory. You can compare the number of internal on-disk temporary tables created to the total number of internal temporary tables created by comparing the values of the Created_tmp_disk_tables and Created_tmp_tables variables.
+max_heap_table_size = 64m           # This variable sets the maximum size to which user-created MEMORY tables are permitted to grow. This variable is also used in conjunction with tmp_table_size to limit the size of internal in-memory tables.
+table_open_cache = 4096             # The number of open tables for all threads. You can check whether you need to increase the table cache by checking the Opened_tables status variable.
+# table_definition_cache            # The number of table definitions (from .frm files) that can be stored in the definition cache. If you use a large number of tables, you can create a large table definition cache to speed up opening of tables. The table definition cache takes less space and does not use file descriptors, unlike the normal table cache. The default value is based on the following formula: MIN(400 + table_open_cache / 2, 2000).
+table_open_cache_instances = 64
+
+##############
+### innodb ###
+##############
+innodb_page_size = 8192             # The default 16KB page size or larger is appropriate for a wide range of workloads, particularly for queries involving table scans and DML operations involving bulk updates. Smaller page sizes might be more efficient for OLTP workloads involving many small writes, where contention can be an issue when single pages contain many rows. Smaller pages might also be efficient with SSD storage devices, which typically use small block sizes. Keeping the InnoDB page size close to the storage device block size minimizes the amount of unchanged data that is rewritten to disk.
+innodb_buffer_pool_size = 80g
+innodb_buffer_pool_instances = 8
+innodb_buffer_pool_dump_pct = 50
+innodb_buffer_pool_load_at_startup = on
+innodb_buffer_pool_dump_at_shutdown = on
+innodb_data_home_dir = /opt/mysql/innodb
+innodb_data_file_path = ibdata1:2g:autoextend
+innodb_log_group_home_dir = /opt/mysql/innodb
+innodb_log_file_size = 2g
+innodb_log_files_in_group = 3
+innodb_log_buffer_size = 64m
+innodb_undo_directory = /opt/mysql/innodb
+innodb_undo_tablespaces = 95
+innodb_undo_log_truncate = on
+innodb_max_undo_log_size = 2g
+# innodb_purge_rseg_truncate_frequency = 128
+innodb_tmpdir = /opt/mysql/innodb
+innodb_temp_data_file_path = ibtmp1:64m:autoextend
+innodb_lock_wait_timeout = 3
+innodb_rollback_on_timeout = on
+innodb_print_all_deadlocks = on
+innodb_flush_method = O_DIRECT
+innodb_flush_log_at_trx_commit = 1
+innodb_io_capacity = 16000
+innodb_io_capacity_max = 18000
+innodb_flush_neighbors = 0
+innodb_sync_spin_loops = 100
+innodb_spin_wait_delay = 30
+# innodb_thread_concurrency = 0
+innodb_write_io_threads = 16
+innodb_read_io_threads = 16
+innodb_purge_threads = 16
+innodb_page_cleaners = 16             # If the number of page cleaner threads exceeds the number of buffer pool instances, innodb_page_cleaners is automatically set to the same value as innodb_buffer_pool_instances.
+# innodb_lru_scan_depth = 1024        # A setting smaller than the default is generally suitable for most workloads. A value that is much higher than necessary may impact performance.
+innodb_stats_persistent_sample_pages = 64
+# innodb_autoinc_lock_mode = 2
+innodb_online_alter_log_max_size = 4g
+innodb_open_files = 65535
+innodb_max_dirty_pages_pct = 50
+# innodb_fast_shutdown = 1            # If the value is 0, InnoDB does a slow shutdown, a full purge and a change buffer merge before shutting down. If the value is 1 (the default), InnoDB skips these operations at shutdown, a process known as a fast shutdown. If the value is 2, InnoDB flushes its logs and shuts down cold, as if MySQL had crashed; no committed transactions are lost, but the crash recovery operation makes the next startup take longer.
+
+#########################
+### async replication ###
+#########################
+# report_host = 10.0.0.155
+master_info_repository = table
+relay_log_info_repository = table
+gtid_mode = on
+enforce_gtid_consistency = on
+log_slave_updates = on
+relay_log = /opt/mysql/logs/relay/relay-bin
+relay_log_index = /opt/mysql/logs/relay/relay-bin.index
+relay_log_recovery = on
+slave_parallel_type = logical_clock
+slave_parallel_workers = 16
+slave_preserve_commit_order = 1
+slave_transaction_retries = 128
+binlog_transaction_dependency_tracking = writeset
+transaction_write_set_extraction = xxhash64
+slave_net_timeout = 30
+# skip-slave-start
+# slave_skip_errors = ddl_exist_errors
+# slave_rows_search_algorithms = 'INDEX_SCAN,HASH_SCAN'
+
+#############################
+### semi sync replication ###
+#############################
+# rpl_semi_sync_master_enabled = on
+# rpl_semi_sync_master_timeout = 3000
+# rpl_semi_sync_master_wait_no_slave = on
+# rpl_semi_sync_master_wait_for_slave_count = 1
+# rpl_semi_sync_slave_enabled = on
+
+#########################
+### group replication ###
+#########################
+# binlog_checksum = NONE
+# group_replication_group_name = "12345678-9009-8765-4321-abcdefabcdef"
+# group_replication_start_on_boot = off
+# group_replication_local_address = '10.0.0.155:3366'
+# group_replication_group_seeds = '10.0.0.155:3366,10.0.0.156:3366,10.0.0.157:3366'
+# group_replication_bootstrap_group = off
+# group_replication_single_primary_mode = off
+# group_replication_enforce_update_everywhere_checks = on
+# group_replication_ip_whitelist = '10.0.0.0/24'
