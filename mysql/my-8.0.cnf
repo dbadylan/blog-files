@@ -132,6 +132,7 @@ innodb_max_undo_log_size = 2g
 # innodb_purge_rseg_truncate_frequency = 128
 innodb_tmpdir = /opt/mysql/innodb
 innodb_temp_data_file_path = ibtmp1:64m:autoextend
+innodb_large_prefix = on
 innodb_lock_wait_timeout = 3
 innodb_rollback_on_timeout = on
 innodb_print_all_deadlocks = on
