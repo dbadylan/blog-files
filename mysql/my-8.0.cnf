@@ -1,7 +1,7 @@
 # mysql 8.0.x
 # 32 cpu core
 # 128g memory
-# ssd storage with 20000 iops in 8k page size
+# ssd storage with 60000+ iops in 8k page size
 
 [client]
 port = 3306
@@ -138,8 +138,8 @@ innodb_rollback_on_timeout = on
 innodb_print_all_deadlocks = on
 innodb_flush_method = O_DIRECT
 innodb_flush_log_at_trx_commit = 1
-innodb_io_capacity = 16000
-innodb_io_capacity_max = 18000
+innodb_io_capacity = 50000
+innodb_io_capacity_max = 60000
 innodb_flush_neighbors = 0
 innodb_sync_spin_loops = 100
 innodb_spin_wait_delay = 30
