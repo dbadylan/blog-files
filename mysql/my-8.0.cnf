@@ -126,7 +126,6 @@ innodb_log_file_size = 2g
 innodb_log_files_in_group = 3
 innodb_log_buffer_size = 64m
 innodb_undo_directory = /opt/mysql/innodb
-innodb_undo_tablespaces = 95
 innodb_undo_log_truncate = on
 innodb_max_undo_log_size = 2g
 # innodb_purge_rseg_truncate_frequency = 128
