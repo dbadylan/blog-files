@@ -199,3 +199,4 @@ slave_net_timeout = 30
 # group_replication_single_primary_mode = off
 # group_replication_enforce_update_everywhere_checks = on
 # group_replication_ip_whitelist = '10.0.0.0/24'
+# group_replication_consistency
