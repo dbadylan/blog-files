@@ -56,6 +56,10 @@ sync_binlog = 1
 binlog_rows_query_log_events = on
 binlog_expire_logs_seconds = 604800
 log_bin_trust_function_creators = on
+# binlog_cache_size = 32k              # If you often use large transactions, you can increase this cache size to get better performance. The Binlog_cache_use and Binlog_cache_disk_use status variables can be useful for tuning the size of this variable. 
+# max_binlog_cache_size = 4g           # The maximum recommended value is 4GB; this is due to the fact that MySQL currently cannot work with binary log positions greater than 4GB.
+# binlog_stmt_cache_size = 4096        # If you often use large nontransactional statements during transactions, you can increase this cache size to get better performance. The Binlog_stmt_cache_use and Binlog_stmt_cache_disk_use status variables can be useful for tuning the size of this variable.
+# max_binlog_stmt_cache_size = 4096    # If nontransactional statements within a transaction require more than this many bytes of memory, the server generates an error. 
 
 ################
 ### slow log ###
@@ -83,8 +87,8 @@ interactive_timeout = 600           # The number of seconds the server waits for
 lock_wait_timeout = 300             # This variable specifies the timeout in seconds for attempts to acquire metadata locks.This timeout applies to all statements that use metadata locks. These include DML and DDL operations on tables, views, stored procedures, and stored functions, as well as LOCK TABLES, FLUSH TABLES WITH READ LOCK, and HANDLER statements.
 skip_name_resolve = on
 open_files_limit = 65535            # 1) 10 + max_connections + (table_open_cache * 2),  2) max_connections * 5,  3) operating system limit if positive,  4) if operating system limit is Infinity: open_files_limit value specified at startup, 5000 if none.
-max_connections = 512
-max_user_connections = 128          # The maximum number of simultaneous connections permitted to any given MySQL user account.
+max_connections = 1024
+max_user_connections = 256          # The maximum number of simultaneous connections permitted to any given MySQL user account.
 max_connect_errors = 1000000        # If more than this many successive connection requests from a host are interrupted without a successful connection, the server blocks that host from further connections. 
 # back_log                          # The number of outstanding connection requests MySQL can have.You need to increase this only if you expect a large number of connections in a short period of time. The default value is based on the following formula: 50 + ( max_connections / 5 )
 
@@ -96,17 +100,15 @@ read_buffer_size = 16m              # This option is also used in the following 
 read_rnd_buffer_size = 32m          # This variable is used for reads from MyISAM tables, and, for any storage engine, for Multi-Range Read optimization.
 sort_buffer_size = 16m
 join_buffer_size = 16m
-binlog_cache_size = 4m              # A binary log cache is allocated for each client if the server supports any transactional storage engines and if the server has the binary log enabled.
-max_binlog_cache_size = 4g          # The maximum recommended value is 4GB; this is due to the fact that MySQL currently cannot work with binary log positions greater than 4GB.
-thread_stack = 256k                 # The stack size for each thread. The default of 192KB (256KB for 64-bit systems) is large enough for normal operation.
+tmp_table_size = 64m                # This variable does not apply to user-created MEMORY tables. The actual limit is determined from whichever of the values of tmp_table_size and max_heap_table_size is smaller. Increase the value of tmp_table_size (and max_heap_table_size if necessary) if you do many advanced GROUP BY queries and you have lots of memory. You can compare the number of internal on-disk temporary tables created to the total number of internal temporary tables created by comparing the values of the Created_tmp_disk_tables and Created_tmp_tables variables.
+max_heap_table_size = 64m           # This variable sets the maximum size to which user-created MEMORY tables are permitted to grow. This variable is also used in conjunction with tmp_table_size to limit the size of internal in-memory tables.
+# thread_stack = 256k               # The stack size for each thread. The default of 192KB (256KB for 64-bit systems) is large enough for normal operation.
 # thread_cache_size                 # How many threads the server should cache for reuse. By examining the difference between the Connections and Threads_created status variables, you can see how efficient the thread cache is. The default value is based on the following formula: 8 + ( max_connections / 100 )
 
 #####################
 ### global memory ###
 #####################
 key_buffer_size = 8                 # for myisam table
-tmp_table_size = 64m                # This variable does not apply to user-created MEMORY tables. The actual limit is determined from whichever of the values of tmp_table_size and max_heap_table_size is smaller. Increase the value of tmp_table_size (and max_heap_table_size if necessary) if you do many advanced GROUP BY queries and you have lots of memory. You can compare the number of internal on-disk temporary tables created to the total number of internal temporary tables created by comparing the values of the Created_tmp_disk_tables and Created_tmp_tables variables.
-max_heap_table_size = 64m           # This variable sets the maximum size to which user-created MEMORY tables are permitted to grow. This variable is also used in conjunction with tmp_table_size to limit the size of internal in-memory tables.
 table_open_cache = 4096             # The number of open tables for all threads. You can check whether you need to increase the table cache by checking the Opened_tables status variable.
 # table_definition_cache            # The number of table definitions (from .frm files) that can be stored in the definition cache. If you use a large number of tables, you can create a large table definition cache to speed up opening of tables. The table definition cache takes less space and does not use file descriptors, unlike the normal table cache. The default value is based on the following formula: MIN(400 + table_open_cache / 2, 2000).
 table_open_cache_instances = 64
