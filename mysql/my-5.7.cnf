@@ -82,7 +82,7 @@ interactive_timeout = 600           # The number of seconds the server waits for
 lock_wait_timeout = 300             # This variable specifies the timeout in seconds for attempts to acquire metadata locks.This timeout applies to all statements that use metadata locks. These include DML and DDL operations on tables, views, stored procedures, and stored functions, as well as LOCK TABLES, FLUSH TABLES WITH READ LOCK, and HANDLER statements.
 skip_name_resolve = on
 open_files_limit = 65535            # 1) 10 + max_connections + (table_open_cache * 2),  2) max_connections * 5,  3) operating system limit if positive,  4) if operating system limit is Infinity: open_files_limit value specified at startup, 5000 if none.
-max_connections = 1024
+max_connections = 512
 max_user_connections = 256          # The maximum number of simultaneous connections permitted to any given MySQL user account.
 max_connect_errors = 1000000        # If more than this many successive connection requests from a host are interrupted without a successful connection, the server blocks that host from further connections. 
 # back_log                          # The number of outstanding connection requests MySQL can have.You need to increase this only if you expect a large number of connections in a short period of time. The default value is based on the following formula: 50 + ( max_connections / 5 )
@@ -91,10 +91,12 @@ max_connect_errors = 1000000        # If more than this many successive connecti
 ### session memory ###
 ######################
 bulk_insert_buffer_size = 0         # for myisam table
-read_buffer_size = 16m              # This option is also used in the following context for all storage engines: for caching the indexes in a temporary file (not a temporary table), when sorting rows for ORDER BY; for bulk insert into partitions; for caching results of nested queries.
-read_rnd_buffer_size = 32m          # This variable is used for reads from MyISAM tables, and, for any storage engine, for Multi-Range Read optimization.
+read_buffer_size = 8m               # This option is also used in the following context for all storage engines: for caching the indexes in a temporary file (not a temporary table), when sorting rows for ORDER BY; for bulk insert into partitions; for caching results of nested queries.
+read_rnd_buffer_size = 16m          # This variable is used for reads from MyISAM tables, and, for any storage engine, for Multi-Range Read optimization.
 sort_buffer_size = 16m
 join_buffer_size = 16m
+tmp_table_size = 32m                # This variable does not apply to user-created MEMORY tables. The actual limit is determined from whichever of the values of tmp_table_size and max_heap_table_size is smaller. Increase the value of tmp_table_size (and max_heap_table_size if necessary) if you do many advanced GROUP BY queries and you have lots of memory. You can compare the number of internal on-disk temporary tables created to the total number of internal temporary tables created by comparing the values of the Created_tmp_disk_tables and Created_tmp_tables variables.
+max_heap_table_size = 32m           # This variable sets the maximum size to which user-created MEMORY tables are permitted to grow. This variable is also used in conjunction with tmp_table_size to limit the size of internal in-memory tables.
 # thread_stack = 256k               # The stack size for each thread. The default of 192KB (256KB for 64-bit systems) is large enough for normal operation.
 # thread_cache_size                 # How many threads the server should cache for reuse. By examining the difference between the Connections and Threads_created status variables, you can see how efficient the thread cache is. The default value is based on the following formula: 8 + ( max_connections / 100 )
 
@@ -104,8 +106,6 @@ join_buffer_size = 16m
 query_cache_size = 0
 query_cache_type = 0
 key_buffer_size = 8                 # for myisam table
-tmp_table_size = 64m                # This variable does not apply to user-created MEMORY tables. The actual limit is determined from whichever of the values of tmp_table_size and max_heap_table_size is smaller. Increase the value of tmp_table_size (and max_heap_table_size if necessary) if you do many advanced GROUP BY queries and you have lots of memory. You can compare the number of internal on-disk temporary tables created to the total number of internal temporary tables created by comparing the values of the Created_tmp_disk_tables and Created_tmp_tables variables.
-max_heap_table_size = 64m           # This variable sets the maximum size to which user-created MEMORY tables are permitted to grow. This variable is also used in conjunction with tmp_table_size to limit the size of internal in-memory tables.
 table_open_cache = 4096             # The number of open tables for all threads. You can check whether you need to increase the table cache by checking the Opened_tables status variable.
 # table_definition_cache            # The number of table definitions (from .frm files) that can be stored in the definition cache. If you use a large number of tables, you can create a large table definition cache to speed up opening of tables. The table definition cache takes less space and does not use file descriptors, unlike the normal table cache. The default value is based on the following formula: MIN(400 + table_open_cache / 2, 2000).
 table_open_cache_instances = 64
