@@ -5,7 +5,7 @@
 
 [client]
 port = 3306
-socket = /opt/mysql/run/mysql.sock
+socket = /home/mysql/inst3306/tmp/mysql.sock
 default_character_set = utf8mb4
 
 [mysql]
@@ -22,10 +22,10 @@ malloc-lib = tcmalloc
 user = mysql
 port = 3306
 basedir = /usr/local/mysql
-datadir = /opt/mysql/data
-pid_file = /opt/mysql/run/mysql.pid
-socket = /opt/mysql/run/mysql.sock
-tmpdir = /opt/mysql/tmp
+datadir = /home/mysql/inst3306/data
+pid_file = /home/mysql/inst3306/tmp/mysql.pid
+socket = /home/mysql/inst3306/tmp/mysql.sock
+tmpdir = /home/mysql/inst3306/tmp
 server_id = 1553306
 character_set_server = utf8mb4
 collation_server = utf8mb4_unicode_ci
@@ -43,13 +43,13 @@ sha256_password_auto_generate_rsa_keys = off
 ### error log ###
 #################
 log_timestamps = system
-log_error = /opt/mysql/logs/error/error.log
+log_error = /home/mysql/inst3306/logs/error.log
 log_error_verbosity = 2
 
 ##################
 ### binary log ###
 ##################
-log_bin = /opt/mysql/logs/binary/bin
+log_bin = /home/mysql/inst3306/logs/binary
 max_binlog_size = 512m
 binlog_format = row
 sync_binlog = 1
@@ -65,7 +65,7 @@ log_bin_trust_function_creators = on
 ### slow log ###
 ################
 slow_query_log = on
-slow_query_log_file = /opt/mysql/logs/slow/slow.log
+slow_query_log_file = /home/mysql/inst3306/logs/slow.log
 long_query_time = 1
 # log_queries_not_using_indexes = on
 # log_throttle_queries_not_using_indexes = 10
@@ -76,7 +76,7 @@ long_query_time = 1
 ### general log ###
 ###################
 # general_log = on
-# general_log_file = /data/mysql/logs/general/general.log
+# general_log_file = /home/mysql/inst3306/logs/general.log
 
 ##################
 ### connection ###
@@ -122,17 +122,14 @@ innodb_buffer_pool_instances = 16
 innodb_buffer_pool_dump_pct = 50
 innodb_buffer_pool_load_at_startup = on
 innodb_buffer_pool_dump_at_shutdown = on
-innodb_data_home_dir = /opt/mysql/innodb
 innodb_data_file_path = ibdata1:2g:autoextend
-innodb_log_group_home_dir = /opt/mysql/innodb
 innodb_log_file_size = 2g
 innodb_log_files_in_group = 3
 innodb_log_buffer_size = 64m
-innodb_undo_directory = /opt/mysql/innodb
 innodb_undo_log_truncate = on
 innodb_max_undo_log_size = 2g
 # innodb_purge_rseg_truncate_frequency = 128
-innodb_tmpdir = /opt/mysql/innodb
+innodb_tmpdir = /home/mysql/inst3306/tmp
 innodb_temp_data_file_path = ibtmp1:64m:autoextend
 innodb_lock_wait_timeout = 3
 innodb_rollback_on_timeout = on
@@ -166,8 +163,8 @@ relay_log_info_repository = table
 gtid_mode = on
 enforce_gtid_consistency = on
 log_slave_updates = on
-relay_log = /opt/mysql/logs/relay/relay-bin
-relay_log_index = /opt/mysql/logs/relay/relay-bin.index
+relay_log = /home/mysql/inst3306/logs/relay
+relay_log_index = /home/mysql/inst3306/logs/relay.index
 relay_log_recovery = on
 slave_parallel_type = logical_clock
 slave_parallel_workers = 16
