@@ -9,7 +9,7 @@ socket = /home/mysql/inst3306/tmp/mysql.sock
 default_character_set = utf8mb4
 
 [mysql]
-prompt="[\u@\h \R:\m \d]> "
+prompt='[\u@\h \R:\m \d]> '
 no-auto-rehash
 
 [mysqld_safe]
@@ -31,7 +31,7 @@ character_set_server = utf8mb4
 collation_server = utf8mb4_unicode_ci
 transaction_isolation = REPEATABLE-READ
 lower_case_table_names = 1
-default_time_zone = "+8:00"
+default_time_zone = '+8:00'
 explicit_defaults_for_timestamp = on        # This system variable determines whether the server enables certain nonstandard behaviors for default values and NULL-value handling in TIMESTAMP columns.
 skip-ssl
 # secure_file_priv = ''
@@ -192,7 +192,7 @@ slave_net_timeout = 30
 ### group replication ###
 #########################
 # binlog_checksum = NONE
-# group_replication_group_name = "12345678-9009-8765-4321-abcdefabcdef"
+# group_replication_group_name = '12345678-9009-8765-4321-abcdefabcdef'
 # group_replication_start_on_boot = off
 # group_replication_local_address = '10.0.0.155:3366'
 # group_replication_group_seeds = '10.0.0.155:3366,10.0.0.156:3366,10.0.0.157:3366'
