@@ -1,7 +1,7 @@
 # mysql 5.7.x
 # 32 cpu core
 # 128g memory
-# ssd storage with 60000+ iops in 8k page size
+# ssd storage with 60000+ iops
 
 [client]
 port = 3306
@@ -31,6 +31,7 @@ character_set_server = utf8mb4
 collation_server = utf8mb4_unicode_ci
 transaction_isolation = REPEATABLE-READ
 lower_case_table_names = 1
+default_time_zone = "+8:00"
 explicit_defaults_for_timestamp = on        # This system variable determines whether the server enables certain nonstandard behaviors for default values and NULL-value handling in TIMESTAMP columns.
 # secure_file_priv = ''
 
@@ -137,6 +138,7 @@ innodb_flush_method = O_DIRECT
 innodb_flush_log_at_trx_commit = 1
 innodb_io_capacity = 50000
 innodb_io_capacity_max = 60000
+innodb_flush_sync = off
 innodb_flush_neighbors = 0
 innodb_sync_spin_loops = 100
 innodb_spin_wait_delay = 30
