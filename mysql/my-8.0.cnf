@@ -1,7 +1,7 @@
 # mysql 8.0.x
 # 32 cpu core
 # 128g memory
-# ssd storage with 60000+ iops in 8k page size
+# ssd storage with 60000+ iops
 
 [client]
 port = 3306
