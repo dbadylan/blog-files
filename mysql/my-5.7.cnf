@@ -33,6 +33,7 @@ transaction_isolation = REPEATABLE-READ
 lower_case_table_names = 1
 default_time_zone = "+8:00"
 explicit_defaults_for_timestamp = on        # This system variable determines whether the server enables certain nonstandard behaviors for default values and NULL-value handling in TIMESTAMP columns.
+skip-ssl
 # secure_file_priv = ''
 
 #################
