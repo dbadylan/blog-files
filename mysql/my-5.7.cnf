@@ -1,6 +1,6 @@
 # mysql 5.7.x
 # 40 cpu core (intel xeon e5-2640 v4)
-# 256g memory
+# 256g memory (16g * 16)
 # 800g ssd * 8, raid5, 40000+ iops (intel ssd s3500)
 
 # variable                                           # value                                             # default                    # description
@@ -16,9 +16,6 @@ datadir                                              = /home/mysql/inst3306/data
 pid_file                                             = /home/mysql/inst3306/tmp/mysql.pid
 socket                                               = /home/mysql/inst3306/tmp/mysql.sock               # /tmp/mysql.sock
 tmpdir                                               = /home/mysql/inst3306/tmp                          # /tmp
-server_id                                            = 100013306                                         # 0
-character_set_server                                 = utf8mb4                                           # latin1
-collation_server                                     = utf8mb4_unicode_ci                                # latin1_swedish_ci
 transaction_isolation                                = REPEATABLE-READ                                   # REPEATABLE-READ
 lower_case_table_names                               = 1                                                 # 0                          # If set to 0, table names are stored as specified and comparisons are case-sensitive. If set to 1, table names are stored in lowercase on disk and comparisons are not case sensitive. If set to 2, table names are stored as given but compared in lowercase.
 explicit_defaults_for_timestamp                      = ON                                                # OFF                        # This system variable determines whether the server enables certain nonstandard behaviors for default values and NULL-value handling in TIMESTAMP columns.
@@ -62,6 +59,10 @@ long_query_time                                      = 1                        
 ##################
 ### connection ###
 ##################
+character_set_server                                 = utf8mb4                                           # latin1
+collation_server                                     = utf8mb4_unicode_ci                                # latin1_swedish_ci
+init_connect                                         = 'SET NAMES utf8mb4'                                                            # A string to be executed by the server for each client that connects. The string consists of one or more SQL statements, separated by semicolon characters. For users that have the SUPER privilege, the content of init_connect is not executed.
+character-set-client-handshake                       = OFF                                               # ON                         # Do not ignore character set information sent by the client.
 max_allowed_packet                                   = 64M                                               # 4194304                    # You must increase this value if you are using large BLOB columns or long strings. It should be as big as the largest BLOB you want to use.
 wait_timeout                                         = 600                                               # 28800                      # The number of seconds the server waits for activity on a noninteractive connection before closing it.
 interactive_timeout                                  = 600                                               # 28800                      # The number of seconds the server waits for activity on an interactive connection before closing it.
@@ -148,10 +149,11 @@ performance_schema_max_table_instances = 40000
 performance_schema_max_sql_text_length = 4096
 performance_schema_max_digest_length = 4096
 
-#########################
-### async replication ###
-#########################
+###################
+### replication ###
+###################
 report_host                                          = 10.0.0.1                                                                       # The host name or IP address of the slave to be reported to the master during slave registration. This value appears in the output of SHOW SLAVE HOSTS on the master server.
+server_id                                            = 100013306                                         # 0
 master_info_repository                               = TABLE                                             # FILE                       # The setting of this variable determines whether the slave logs master status and connection information to a FILE (master.info), or to a TABLE (mysql.slave_master_info). This variable must be set to TABLE before configuring multiple replication channels.
 relay_log_info_repository                            = TABLE                                             # FILE                       # This variable determines whether the slave's position in the relay logs is written to a FILE (relay-log.info) or to a TABLE (mysql.slave_relay_log_info). This variable must be set to TABLE before configuring multiple replication channels.
 gtid_mode                                            = ON                                                # OFF                        # Controls whether GTID based logging is enabled and what type of transactions the logs can contain.
