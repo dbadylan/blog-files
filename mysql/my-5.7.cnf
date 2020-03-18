@@ -43,7 +43,7 @@ binlog_cache_size                                    = 32K                      
 # binlog_stmt_cache_size                             = 4096                                              # 32768                      # If you often use large nontransactional statements during transactions, you can increase this cache size to get better performance. The Binlog_stmt_cache_use and Binlog_stmt_cache_disk_use status variables can be useful for tuning the size of this variable.
 # max_binlog_stmt_cache_size                         = 4096                                              # 18446744073709547520       # If nontransactional statements within a transaction require more than this many bytes of memory, the server generates an error. 
 binlog_group_commit_sync_delay                       = 1000                                              # 0
-binlog_group_commit_sync_no_delay_count              = 16                                                # 0                          # less or equal to thread number
+binlog_group_commit_sync_no_delay_count              = 20                                                # 0                          # less or equal to thread number
 
 ################
 ### slow log ###
