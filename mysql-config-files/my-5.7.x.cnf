@@ -64,16 +64,14 @@ long_query_time                                      = 1                        
 ##################
 character_set_server                                 = utf8mb4                                           # latin1
 collation_server                                     = utf8mb4_unicode_ci                                # latin1_swedish_ci
-init_connect                                         = 'SET NAMES utf8mb4'                                                            # A string to be executed by the server for each client that connects. The string consists of one or more SQL statements, separated by semicolon characters. For users that have the SUPER privilege, the content of init_connect is not executed.
-character-set-client-handshake                       = OFF                                               # ON                         # Do not ignore character set information sent by the client.
 max_allowed_packet                                   = 64M                                               # 4194304                    # You must increase this value if you are using large BLOB columns or long strings. It should be as big as the largest BLOB you want to use.
 wait_timeout                                         = 600                                               # 28800                      # The number of seconds the server waits for activity on a noninteractive connection before closing it.
 interactive_timeout                                  = 600                                               # 28800                      # The number of seconds the server waits for activity on an interactive connection before closing it.
 lock_wait_timeout                                    = 300                                               # 31536000                   # This variable specifies the timeout in seconds for attempts to acquire metadata locks.This timeout applies to all statements that use metadata locks. These include DML and DDL operations on tables, views, stored procedures, and stored functions, as well as LOCK TABLES, FLUSH TABLES WITH READ LOCK, and HANDLER statements.
 skip_name_resolve                                    = ON                                                # OFF                        # If it is OFF, mysqld resolves host names when checking client connections. If it is ON, mysqld uses only IP numbers; in this case, all Host column values in the grant tables must be IP addresses or localhost.
 open_files_limit                                     = 65535                                             # 5000                       # 1) 10 + max_connections + (table_open_cache * 2),  2) max_connections * 5,  3) operating system limit if positive,  4) if operating system limit is Infinity: open_files_limit value specified at startup, 5000 if none.
-max_connections                                      = 512                                               # 151                        # The maximum permitted number of simultaneous client connections.
-max_user_connections                                 = 256                                               # 0                          # The maximum number of simultaneous connections permitted to any given MySQL user account.
+max_connections                                      = 80                                                # 151                        # The maximum permitted number of simultaneous client connections.
+max_user_connections                                 = 80                                                # 0                          # The maximum number of simultaneous connections permitted to any given MySQL user account.
 max_connect_errors                                   = 1000000                                           # 100                        # If more than this many successive connection requests from a host are interrupted without a successful connection, the server blocks that host from further connections. 
 # back_log                                                                                                                            # The number of outstanding connection requests MySQL can have.You need to increase this only if you expect a large number of connections in a short period of time. The default value is based on the following formula: 50 + ( max_connections / 5 ), capped to a limit of 900.
 
@@ -182,16 +180,3 @@ slave_net_timeout                                    = 3
 # rpl_semi_sync_master_wait_no_slave                 = ON
 # rpl_semi_sync_master_wait_for_slave_count          = 1
 # rpl_semi_sync_slave_enabled                        = ON
-
-#########################
-### group replication ###
-#########################
-plugin_load_add = 'group_replication.so'
-group_replication_group_name                         = 12345678-9009-8765-4321-abcdefabcdef
-group_replication_start_on_boot                      = OFF
-group_replication_local_address                      = 10.0.0.1:3366
-group_replication_group_seeds                        = 10.0.0.1:3366,10.0.0.2:3366,10.0.0.3:3366
-group_replication_bootstrap_group                    = OFF
-group_replication_ip_whitelist                       = 10.0.0.0/24
-# group_replication_single_primary_mode              = OFF
-# group_replication_enforce_update_everywhere_checks = ON
