@@ -1,2 +1,2 @@
-# website
-Files of www.dbadylan.com
+# Blog files
+Files of my blog
