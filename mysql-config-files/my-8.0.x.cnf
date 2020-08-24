@@ -12,10 +12,10 @@
 user                                                 = mysql                                             # mysql
 port                                                 = 3306                                              # 3306
 basedir                                              = /usr/local/mysql                                  # /usr/local/mysql
-datadir                                              = /home/mysql/inst3306/data
-pid_file                                             = /home/mysql/inst3306/tmp/mysql.pid
-socket                                               = /home/mysql/inst3306/tmp/mysql.sock               # /tmp/mysql.sock
-tmpdir                                               = /home/mysql/inst3306/tmp                          # /tmp
+datadir                                              = /data/mysql/3306/data
+pid_file                                             = /data/mysql/3306/tmp/mysql.pid
+socket                                               = /data/mysql/3306/tmp/mysql.sock                   # /tmp/mysql.sock
+tmpdir                                               = /data/mysql/3306/tmp                              # /tmp
 transaction_isolation                                = REPEATABLE-READ                                   # REPEATABLE-READ
 lower_case_table_names                               = 1                                                 # 0                          # If set to 0, table names are stored as specified and comparisons are case-sensitive. If set to 1, table names are stored in lowercase on disk and comparisons are not case sensitive. If set to 2, table names are stored as given but compared in lowercase.
 sql_require_primary_key                              = ON                                                # OFF                        # Whether statements that create new tables or alter the structure of existing tables enforce the requirement that tables have a primary key.
@@ -29,14 +29,14 @@ mysqlx                                               = OFF                      
 #################
 ### error log ###
 #################
-log_error                                            = /home/mysql/inst3306/logs/error.log
+log_error                                            = /data/mysql/3306/logs/error.log
 log_error_verbosity                                  = 2                                                 # 3
 log_timestamps                                       = system                                            # UTC
 
 ##################
 ### binary log ###
 ##################
-log_bin                                              = /home/mysql/inst3306/logs/binary
+log_bin                                              = /data/mysql/3306/logs/binary
 max_binlog_size                                      = 512M                                              # 1073741824
 sync_binlog                                          = 1                                                 # 1                          # Controls how often the MySQL server synchronizes the binary log to disk.
 binlog_format                                        = ROW                                               # ROW
@@ -47,22 +47,24 @@ binlog_cache_size                                    = 32K                      
 # max_binlog_cache_size                              = 4G                                                # 18446744073709551615       # The maximum recommended value is 4GB; this is due to the fact that MySQL currently cannot work with binary log positions greater than 4GB.
 # binlog_stmt_cache_size                             = 4096                                              # 32768                      # If you often use large nontransactional statements during transactions, you can increase this cache size to get better performance. The Binlog_stmt_cache_use and Binlog_stmt_cache_disk_use status variables can be useful for tuning the size of this variable.
 # max_binlog_stmt_cache_size                         = 4096                                              # 18446744073709547520       # If nontransactional statements within a transaction require more than this many bytes of memory, the server generates an error. 
-binlog_group_commit_sync_delay                       = 1000                                              # 0
-binlog_group_commit_sync_no_delay_count              = 20                                                # 0                          # less or equal to thread number
+# binlog_group_commit_sync_delay                     = 1000                                              # 0
+# binlog_group_commit_sync_no_delay_count            = 20                                                # 0                          # less or equal to thread number
+binlog_transaction_dependency_tracking               = WRITESET                                          # COMMIT_ORDER
+transaction_write_set_extraction                     = XXHASH64                                          # OFF                        # Defines the algorithm used to generate a hash identifying the writes associated with a transaction. If you are using Group Replication, the hash value is used for distributed conflict detection and handling. On 64-bit systems running Group Replication, we recommend setting this to XXHASH64 in order to avoid unnecessary hash collisions which result in certification failures and the roll back of user transactions. 
 binlog_checksum                                      = NONE                                              # CRC32
 
 ################
 ### slow log ###
 ################
 slow_query_log                                       = ON                                                # OFF
-slow_query_log_file                                  = /home/mysql/inst3306/logs/slow.log                # host_name-slow.log
+slow_query_log_file                                  = /data/mysql/3306/logs/slow.log                    # host_name-slow.log
 long_query_time                                      = 0.3                                               # 10
 
 ###################
 ### general log ###
 ###################
 # general_log                                        = ON                                                # OFF
-# general_log_file                                   = /home/mysql/inst3306/logs/general.log             # host_name.log
+# general_log_file                                   = /data/mysql/3306/logs/general.log                 # host_name.log
 
 ##################
 ### connection ###
@@ -116,7 +118,7 @@ innodb_log_file_size                                 = 4G                       
 innodb_log_buffer_size                               = 64M                                               # 16777216                   # The size in bytes of the buffer that InnoDB uses to write to the log files on disk. A large log buffer enables large transactions to run without the need to write the log to disk before the transactions commit. Thus, if you have transactions that update, insert, or delete many rows, making the log buffer larger saves disk I/O.
 innodb_max_undo_log_size                             = 2G                                                # 1073741824                 # Defines a threshold size for undo tablespaces. If an undo tablespace exceeds the threshold, it can be marked for truncation when innodb_undo_log_truncate is enabled.
 innodb_undo_log_truncate                             = ON                                                # OFF                        # When enabled, undo tablespaces that exceed the threshold value defined by innodb_max_undo_log_size are marked for truncation. Truncating undo logs that reside in the system tablespace is not supported. For truncation to occur, there must be at least two undo tablespaces and two redo-enabled undo logs configured to use undo tablespaces. This means that innodb_undo_tablespaces must be set to a value equal to or greater than 2, and innodb_rollback_segments must set to a value equal to or greater than 35.
-innodb_tmpdir                                        = /home/mysql/inst3306/tmp                          # NULL                       # Used to define an alternate directory for temporary sort files created during online ALTER TABLE operations that rebuild the table. The innodb_tmpdir option was introduced to help avoid overflowing a temporary file directory located on a tmpfs file system.
+innodb_tmpdir                                        = /data/mysql/3306/tmp                              # NULL                       # Used to define an alternate directory for temporary sort files created during online ALTER TABLE operations that rebuild the table. The innodb_tmpdir option was introduced to help avoid overflowing a temporary file directory located on a tmpfs file system.
 innodb_temp_data_file_path                           = ibtmp1:64M:autoextend                             # ibtmp1:12M:autoextend      # Defines the relative path, name, size, and attributes of InnoDB temporary tablespace data files.
 innodb_lock_wait_timeout                             = 3                                                 # 50                         # innodb_lock_wait_timeout applies to InnoDB row locks only. You might decrease this value for highly interactive applications or OLTP systems, to display user feedback quickly or put the update into a queue for processing later. The lock wait timeout value does not apply to deadlocks when innodb_deadlock_detect is enabled (the default) because InnoDB detects deadlocks immediately and rolls back one of the deadlocked transactions. When innodb_deadlock_detect is disabled, InnoDB relies on innodb_lock_wait_timeout for transaction rollback when a deadlock occurs.
 innodb_rollback_on_timeout                           = ON                                                # OFF                        # InnoDB rolls back only the last statement on a transaction timeout by default. If --innodb-rollback-on-timeout is specified, a transaction timeout causes InnoDB to abort and roll back the entire transaction.
@@ -161,15 +163,13 @@ relay_log_info_repository                            = TABLE                    
 gtid_mode                                            = ON                                                # OFF                        # Controls whether GTID based logging is enabled and what type of transactions the logs can contain.
 enforce_gtid_consistency                             = ON                                                # OFF                        # When enabled, the server enforces GTID consistency by allowing execution of only statements that can be safely logged using a GTID. You must set this option to ON before enabling GTID based replication.
 log_slave_updates                                    = ON                                                # OFF                        # Whether updates received by a slave server from a master server should be logged to the slave's own binary log. Binary logging must be enabled on the slave for this variable to have any effect. 
-relay_log                                            = /home/mysql/inst3306/logs/relay
-relay_log_index                                      = /home/mysql/inst3306/logs/relay.index             # host_name-relay-bin.index  # The name of the relay log index file for the default replication channel.
+relay_log                                            = /data/mysql/3306/logs/relay
+relay_log_index                                      = /data/mysql/3306/logs/relay.index                 # host_name-relay-bin.index  # The name of the relay log index file for the default replication channel.
 relay_log_purge                                      = ON                                                # ON                         # Disables or enables automatic purging of relay log files as soon as they are not needed any more.
 relay_log_recovery                                   = ON                                                # OFF                        # Enables automatic relay log recovery immediately following server startup. The recovery process creates a new relay log file, initializes the SQL thread position to this new relay log, and initializes the I/O thread to the SQL thread position. Reading of the relay log from the master then continues. 
 slave_parallel_workers                               = 20                                                # 0                          # Sets the number of slave applier threads for executing replication transactions in parallel. Setting this variable to a number greater than 0 creates a multithreaded slave with this number of applier threads. 
 slave_parallel_type                                  = LOGICAL_CLOCK                                     # DATABASE                   # When using a multithreaded slave (slave_parallel_workers is greater than 0), this variable specifies the policy used to decide which transactions are allowed to execute in parallel on the slave. The variable has no effect on slaves for which multithreading is not enabled.
 slave_preserve_commit_order                          = ON                                                # OFF                        # For multithreaded slaves, enabling this variable ensures that transactions are externalized on the slave in the same order as they appear in the slave's relay log. Setting this variable has no effect on slaves for which multithreading is not enabled. 
-binlog_transaction_dependency_tracking               = WRITESET                                          # COMMIT_ORDER
-transaction_write_set_extraction                     = XXHASH64                                          # OFF                        # Defines the algorithm used to generate a hash identifying the writes associated with a transaction. If you are using Group Replication, the hash value is used for distributed conflict detection and handling. On 64-bit systems running Group Replication, we recommend setting this to XXHASH64 in order to avoid unnecessary hash collisions which result in certification failures and the roll back of user transactions. 
 slave_net_timeout                                    = 3
 # skip-slave-start
 
